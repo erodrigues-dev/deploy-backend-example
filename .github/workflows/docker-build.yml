@@ -1,0 +1,15 @@
+name: Docker build
+
+on:
+  workflow_dispatch:
+
+jobs:
+    build_image:
+      runs-on: ubuntu-latest
+      steps:
+      - uses: actions/checkout@v2
+      - name: Building docker image
+        run: docker build . -t github-actions/backend
+      - name: Export image
+        run: docker save github-actions/backend | gzip > backend_image.tar.gz
+      
