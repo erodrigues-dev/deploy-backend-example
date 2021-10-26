@@ -1,0 +1,24 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Usando github actions para fazer deploy de uma aplicação nodejs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erodrigues-dev/deploy-backend-example.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/erodrigues-dev/deploy-backend-example/issues"
+  },
+  "homepage": "https://github.com/erodrigues-dev/deploy-backend-example#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
