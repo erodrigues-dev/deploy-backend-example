@@ -25,7 +25,7 @@ jobs:
         run: docker image prune -af
       
       - name: Building docker image
-        run: docker build . -t github-actions/backend --platform linux/arm64
+        run: docker buildx build --platform linux/arm64 -t github-actions/backend .
         
       - name: Export image
         run: docker save github-actions/backend | gzip > backend_image.tar.gz
