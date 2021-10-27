@@ -20,9 +20,9 @@ jobs:
       
       - name: Setup Docker BuildX
         uses: docker/setup-buildx-action@v1
-      
-      - name: Clear docker cache
-        run: docker image prune -af
+        
+      - name: Create builder arm64
+        run: docker buildx create --use --name mybuilder node-arm64
       
       - name: Building docker image
         run: docker buildx build --platform linux/arm64 -t github-actions/backend .
