@@ -15,7 +15,7 @@ jobs:
       - uses: kielabokkie/ssh-key-and-known-hosts-action@v1
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          ssh-host: ${{ secrets.SERVER }}
+          ssh-host: ${{ secrets.SERVER_IP }}
       - name: Copy docker image to server
         env: 
           SERVER: ${{ secrets.SERVER_IP }}
