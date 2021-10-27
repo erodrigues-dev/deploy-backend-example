@@ -22,7 +22,9 @@ jobs:
         uses: docker/setup-buildx-action@v1
         
       - name: Create builder arm64
-        run: docker buildx create --use --name mybuilder node-arm64
+        run: | 
+          docker buildx create --use --name mybuilder node-amd64
+          docker buildx create --append --name mybuild node-arm64
       
       - name: Building docker image
         run: docker buildx build --platform linux/arm64 -t github-actions/backend .
