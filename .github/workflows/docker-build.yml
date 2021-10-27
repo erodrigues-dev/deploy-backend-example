@@ -11,8 +11,7 @@ jobs:
       - name: Building docker image
         run: docker build . -t github-actions/backend
       - name: Export image
-        run: docker save github-actions/backend | gzip > backend_image.tar.gz
-      - name: Setup SSH
+        run: docker save github-actions/backend | gzip > backend_image.tar.gz      
       - uses: kielabokkie/ssh-key-and-known-hosts-action@v1
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
