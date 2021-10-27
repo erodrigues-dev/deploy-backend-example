@@ -26,10 +26,10 @@ jobs:
       - name: Deploy to server
         run: scp backend_image.tar.gz $USER@$SERVER:/var/www/api
         
-      - name: Load Image in server
+      - name: Load Image in Server
         run: ssh $USER@$SERVER -t |
           "cd /var/www/api;
-          docker load < backend_image.tar.gz;
+          docker load -i backend_image.tar.gz;
           docker run -d --name my-api-example -p 3000:3000 github-actions/backend;"
           
 
