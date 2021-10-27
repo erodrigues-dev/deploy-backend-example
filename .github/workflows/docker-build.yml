@@ -3,14 +3,19 @@ name: Docker build
 on:
   workflow_dispatch:
 
+env:
+  SERVER: ${{ secrets.SERVER_IP }}
+  USER: ${{ secrets.SERVER_USER }}
+  PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
 jobs:
     build:
       runs-on: ubuntu-latest
       steps:
       - uses: kielabokkie/ssh-key-and-known-hosts-action@v1
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          ssh-host: ${{ secrets.SERVER_IP }}
+          ssh-private-key: $PRIVATE_KEY
+          ssh-host: $SERVER
       - uses: actions/checkout@v2
       - name: Building docker image
         run: docker build . -t github-actions/backend
@@ -22,13 +27,10 @@ jobs:
     deploy:
       runs-on: ubuntu-latest
       needs: build
-      env: 
-        SERVER: ${{ secrets.SERVER_IP }}
-        USER: ${{ secrets.SERVER_USER }}
       steps: 
       - uses: kielabokkie/ssh-key-and-known-hosts-action@v1
         with:
-          ssh-private-key: $SERVER
+          ssh-private-key: $PRIVATE_KEY
           ssh-host: $USER
       - name: Deploy to server
         run: scp backend_image.tar.gz $USER@$SERVER:/var/www/api
