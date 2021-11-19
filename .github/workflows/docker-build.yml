@@ -19,18 +19,26 @@ jobs:
         
       - name: Export image
         run: docker save erodrigues-dev/backend-example | gzip > backend_image.tar.gz
+        
+      - uses: actions/upload-artifact@v2
+        with:
+          name: docker_image
+          path: backend_image.tar.gz
       
     list_files:
       name: List Files
       needs: build
       runs-on: ubuntu-latest
       steps:
-      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with: 
+          name: docker_image
+          
       - name: List files
-        run: ls -la
+        run: ls -l
     
     deploy:
-      needs: build
+      needs: list_files
       runs-on: ubuntu-latest
       steps:
       - uses: kielabokkie/ssh-key-and-known-hosts-action@v1
