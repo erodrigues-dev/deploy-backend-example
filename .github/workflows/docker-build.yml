@@ -24,36 +24,27 @@ jobs:
         with:
           name: docker_image
           path: backend_image.tar.gz
-      
-    list_files:
-      name: List Files
+    
+    deploy:
       needs: build
       runs-on: ubuntu-latest
       steps:
       - uses: actions/download-artifact@v2
         with: 
           name: docker_image
+      - uses: kielabokkie/ssh-key-and-known-hosts-action@v1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-host: ${{ secrets.SERVER_IP }}
           
-      - name: List files
-        run: ls -l
-    
-#     deploy:
-#       needs: list_files
-#       runs-on: ubuntu-latest
-#       steps:
-#       - uses: kielabokkie/ssh-key-and-known-hosts-action@v1
-#         with:
-#           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-#           ssh-host: ${{ secrets.SERVER_IP }}
-          
-#       - name: Deploy to server
-#         run: scp backend_image.tar.gz $USER@$SERVER:/var/www/api
+      - name: Deploy to server
+        run: scp backend_image.tar.gz $USER@$SERVER:/var/www/api
         
-#       - name: Load Image in Server
-#         run: ssh $USER@$SERVER -t |
-#           "cd /var/www/api;
-#           docker load -i backend_image.tar.gz;
-#           docker run -d --name my-api-example -p 3000:3000  erodrigues-dev/backend-example;"
+      - name: Load Image in Server
+        run: ssh $USER@$SERVER -t |
+          "cd /var/www/api;
+          docker load -i backend_image.tar.gz;
+          docker run -d --name my-api-example -p 3000:3000  erodrigues-dev/backend-example;"
           
 
       
