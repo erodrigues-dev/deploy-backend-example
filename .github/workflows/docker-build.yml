@@ -11,27 +11,29 @@ jobs:
     build:
       runs-on: ubuntu-latest
       steps:
+      - uses: actions/checkout@v2
+      
+      - name: Building docker image
+        run: docker build -t github-actions/backend .
+        
+      - name: Export image
+        run: docker save erodrigues-dev/backend-example | gzip > backend_image.tar.gz
+      
+    list_files:
+      runs-on: ubuntu-latest
+      steps:
+      - uses: actions/checkout@v2
+      - name: List files
+        run: ls -la
+    
+    deploy:
+      runs-on: ubuntu-latest
+      steps:
       - uses: kielabokkie/ssh-key-and-known-hosts-action@v1
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           ssh-host: ${{ secrets.SERVER_IP }}
-      
-      - uses: actions/checkout@v2
-      
-      - name: Setup Docker BuildX
-        uses: docker/setup-buildx-action@v1
-        
-      - name: Create builder arm64
-        run: | 
-          docker buildx create --use --name mybuilder node-amd64
-          docker buildx create --append --name mybuild node-arm64
-      
-      - name: Building docker image
-        run: docker buildx build --platform linux/arm64 -t github-actions/backend .
-        
-      - name: Export image
-        run: docker save github-actions/backend | gzip > backend_image.tar.gz
-        
+          
       - name: Deploy to server
         run: scp backend_image.tar.gz $USER@$SERVER:/var/www/api
         
@@ -39,7 +41,7 @@ jobs:
         run: ssh $USER@$SERVER -t |
           "cd /var/www/api;
           docker load -i backend_image.tar.gz;
-          docker run -d --name my-api-example -p 3000:3000 --platform linux/arm64  github-actions/backend;"
+          docker run -d --name my-api-example -p 3000:3000  erodrigues-dev/backend-example;"
           
 
       
