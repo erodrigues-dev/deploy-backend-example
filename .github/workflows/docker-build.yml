@@ -9,6 +9,7 @@ env:
   
 jobs:
     build:
+      name: Build Docker Image
       runs-on: ubuntu-latest
       steps:
       - uses: actions/checkout@v2
@@ -20,6 +21,8 @@ jobs:
         run: docker save erodrigues-dev/backend-example | gzip > backend_image.tar.gz
       
     list_files:
+      name: List Files
+      needs: build
       runs-on: ubuntu-latest
       steps:
       - uses: actions/checkout@v2
@@ -27,6 +30,7 @@ jobs:
         run: ls -la
     
     deploy:
+      needs: build
       runs-on: ubuntu-latest
       steps:
       - uses: kielabokkie/ssh-key-and-known-hosts-action@v1
